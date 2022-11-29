@@ -60,6 +60,40 @@ app.post('/api/notes', function(req, res){
 
 });
 
+//DELETE Request
+app.delete('/api/notes/:id', function(req, res){
+
+  const id = parseInt(req.params.id);
+
+  readFile('./db/db.json', 'utf8').then(
+
+    function(data){
+
+        const savedNotes = [].concat(JSON.parse(data));
+        const updNotes = [];
+
+        for (let i = 0; i < savedNotes.length; i++) {
+
+          if(id !== notes[i].id) {
+            
+            updNotes.push(savedNotes[i]);
+
+          }
+
+        }
+
+        return updNotes;
+
+      }).then(
+
+        function(notes){
+
+          writeFile("./db/db.json", JSON.stringify(notes));
+          res.send('Deleted note');
+
+        });
+});
+
 //Listen
 app.listen(PORT, function(){
   console.log(`Server listening on PORT ${PORT}`);
